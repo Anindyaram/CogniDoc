@@ -1,7 +1,7 @@
-import Image from "next/image";
+import MaxWidthWrappper from "@/components/MaxWidthWrapper";
 
 export default function Home() {
   return (
-    <div></div>
-  );
+    <MaxWidthWrappper className="bg-red-500">Hello World</MaxWidthWrappper> 
+     );
 }
