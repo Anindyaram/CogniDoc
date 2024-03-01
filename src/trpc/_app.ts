@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { procedure, router } from './trpc';
+import { privateProcedure, procedure, router } from './trpc';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
@@ -29,7 +29,39 @@ export const appRouter = router({
         }
 
         return {success:true}
-    })
+    }),
+
+    getUserFiles:privateProcedure.query(async({ctx})=>{
+        const {userId, user} = ctx;
+        return await db.file.findMany({
+            where:{
+                userId
+            }
+        })
+    }),
+
+    deleteFile:privateProcedure.input(
+        z.object({id:z.string(), name:z.string()})
+    ).mutation(async ({ctx ,input})=>{
+        const { userId } = ctx;
+        const file = await db.file.findFirst({
+            where:{
+                id:input.id,
+                userId,
+            }
+        })
+
+        if(!file) throw new TRPCError({code:'NOT_FOUND',message:'File not found'});
+
+        await db.file.delete({
+            where:{
+                id:input.id,
+                userId,
+            }
+        })
+
+        return file
+    }),
 });
 
 // export type definition of API
