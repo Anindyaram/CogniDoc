@@ -15,7 +15,7 @@ const Search = () => {
         if(error?.data?.code === 'UNAUTHORIZED'){
           router.push('/sign-in')
         }
-        else if(!isLoading){
+        if(!isLoading){
             router.push((data !== undefined && data.success&& origin) ? `/${origin}` : '/dashboard')
         }
       },[data,isLoading,error,router])
