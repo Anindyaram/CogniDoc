@@ -5,12 +5,43 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import DropZone from "react-dropzone"
 import { Cloud,File } from "lucide-react";
+import { Progress } from "./ui/progress";
+import { resolve } from "path";
 
 const UploadDropZone = () => {
 
-    
+    const [isUploading, setIsUploading] = useState<Boolean | null>(true)
+    const [upLoadProgress, setUploadProgress] = useState<number>(0)
 
-    return <DropZone multiple={true} onDrop={acceptedFiles => console.log(acceptedFiles)}>
+    //determinate progress bar
+    const startSimultedProgress = () =>{
+      setUploadProgress(0)
+
+      const interval = setInterval(()=>{
+        setUploadProgress((prevProgress)=>{
+          if(prevProgress >= 95){
+            clearInterval(interval)
+            return prevProgress
+          }
+          return prevProgress + 5
+        })
+      },500)
+      return interval
+    }
+
+    // UploadButton 
+    return <DropZone multiple={true} 
+      onDrop={async (acceptedFiles) =>{ 
+        setIsUploading(true)
+
+        const progressInterval = startSimultedProgress()
+
+        //handle file uploading 
+
+        clearInterval(progressInterval)
+        setUploadProgress(100)
+        console.log(acceptedFiles)
+      }}>
        {({ getRootProps, getInputProps, acceptedFiles }) => (
         <div
           {...getRootProps()}
@@ -40,6 +71,12 @@ const UploadDropZone = () => {
                   <div className='px-3 py-2 h-full text-sm truncate'>
                     {acceptedFiles[0].name}
                   </div>
+                </div>
+              ) : null}
+
+              {isUploading ? (
+                <div className="w-full mt-4 max-w-xs mx-auto">
+                  <Progress value={upLoadProgress} className="h-1 w-full bg-zinc-200"/>
                 </div>
               ) : null}
             </label>
