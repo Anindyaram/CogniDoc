@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, ChevronUp, Loader2, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, RotateCw, Search } from "lucide-react";
 import {Document, Page, pdfjs} from "react-pdf"
 
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -30,6 +30,7 @@ const PdfRenderer = ({url}:PdfRendererProps)=>{
     const [numPages, setNumPages] = useState<number>(0)
     const [currPage, setCurrPage] = useState<number>(1)
     const [scale, setScale] = useState<number>(1)
+    const [rotation ,setRotation] = useState<number>(0)
 
     const CustomPageValidator = z.object({
         page: z.string().refine((num)=> Number(num) > 0 && Number(num) <= numPages!)
@@ -60,7 +61,7 @@ const PdfRenderer = ({url}:PdfRendererProps)=>{
             {/* Pdf options */}
             <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
                 <div className="flex items-center gap-1.5">
-{/* Right ChevronButton in pdf feature bar */}
+{/* Left ChevronButton in pdf feature bar */}
                     <Button 
                         disabled={currPage <= 1}
                         onClick={()=>{
@@ -102,18 +103,21 @@ const PdfRenderer = ({url}:PdfRendererProps)=>{
                 </div>
 
 {/* Zooming the pdf feature bar */}
-                <div className="space-x-4">
+                <div className="space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
                                 className="gap-1.5"
                                 aria-label="zoom" 
                                 variant='ghost'>
-                                <Search h-4 w-4 />
+                                <Search className="h-4 w-4" />
                                 {scale * 100}%<ChevronDown className="h-3 w-3 opacity-50" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
+                        <DropdownMenuItem onSelect={()=>setScale(0.5)}>
+                                50%
+                            </DropdownMenuItem>
                             <DropdownMenuItem onSelect={()=>setScale(1)}>
                                 100%
                             </DropdownMenuItem>
@@ -127,7 +131,17 @@ const PdfRenderer = ({url}:PdfRendererProps)=>{
                                 250%
                             </DropdownMenuItem>
                         </DropdownMenuContent>
-                    </DropdownMenu>    
+                    </DropdownMenu>   
+{/* Rotation button created */}
+                    <Button 
+                    onClick={()=>setRotation((prev)=>prev+90)} 
+                    variant='ghost' 
+                    aria-label="rotate 90 degrees">
+                        <RotateCw className="h-4 w-4" />    
+                    </Button> 
+{/* Creating fullscreen button */}
+                    
+                    
                 </div>
 
                 
@@ -153,7 +167,7 @@ const PdfRenderer = ({url}:PdfRendererProps)=>{
                                 setNumPages(numPages)
                             }}
                             file={url} className='max-h-full'>
-                                <Page width={width? width:1} pageNumber={currPage} scale={scale}/>
+                                <Page width={width? width:1} pageNumber={currPage} scale={scale} rotate={rotation}/> 
                         </Document>
                     </div>
                 </SimpleBar>
