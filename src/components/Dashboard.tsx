@@ -68,7 +68,7 @@ const Dashboard = () =>{
 
                                         <div>
                                             <Button 
-                                                onClick={()=>deleteFile({id:file.id,name:file.name})}
+                                                onClick={()=>deleteFile({id:file.id,name:file.name,key:file.key})}
                                                 size='sm' 
                                                 className="w-full"
                                                 variant='destructive'>

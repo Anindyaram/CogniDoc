@@ -2,7 +2,10 @@ import { z } from 'zod';
 import { privateProcedure, procedure, router } from './trpc';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { TRPCError } from '@trpc/server';
+import { UTApi } from 'uploadthing/server';
 import { db } from '@/db';
+
+const utapi = new UTApi()
 
 export const appRouter = router({
     authCallback: procedure.query(async ()=>{
@@ -69,7 +72,7 @@ export const appRouter = router({
             return file
     }),
 
-    deleteFile:privateProcedure.input(z.object({id:z.string(), name:z.string()})).mutation(async ({ctx ,input})=>{
+    deleteFile:privateProcedure.input(z.object({id:z.string(), name:z.string(), key:z.string()})).mutation(async ({ctx ,input})=>{
         const { userId } = ctx;
         const file = await db.file.findFirst({
             where:{
@@ -87,6 +90,7 @@ export const appRouter = router({
             }
         })
 
+        await utapi.deleteFiles(input.key)
         return file
     }),
 });

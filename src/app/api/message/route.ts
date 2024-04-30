@@ -1,4 +1,5 @@
 import { db } from "@/db";
+// import { getPineconeClient } from "@/lib/pinecone";
 import { SendMessageValidator } from "@/lib/validators/SendMessageValidator";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
@@ -37,6 +38,12 @@ export const POST = async(req:NextResponse)=>{
 
     //Applying sementic query to the file
     //Vectorize the message
+    // const embeddings = new OPENAI_API_KEY({
+    //     openAIApiKey: process.env.OPENAI_API_KEY,
+    // })
+
+    // const pinecone = await getPineconeClient()
+    // const pineconeIndex = pinecone.Index('anindya-cognidoc');
 
      
 

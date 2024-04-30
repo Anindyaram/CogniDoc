@@ -23,7 +23,8 @@ export default function Home() {
           size:'lg',
           className:'mt-5',
           })} 
-          href='/dashboards' target="_blank">
+          // href='/dashboards' target="_blank">
+          href='/dashboard' target="_blank">
             Get Started <ArrowRight className="ml5 h-5 w-5"/>
         </Link>
       </MaxWidthWrappper> 
