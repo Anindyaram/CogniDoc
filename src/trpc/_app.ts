@@ -45,7 +45,7 @@ export const appRouter = router({
             where:{
                 id:input.fileId,
                 userId:ctx.userId
-            }
+            },
         })
 
         if(!file) return {status:"PENDING" as const}
