@@ -5,6 +5,5 @@ export const getPineconeClient = () => {
     apiKey: process.env.PINECONE_API_KEY!,
     environment:'us-east-1'
   });
-
   return client;
 };
